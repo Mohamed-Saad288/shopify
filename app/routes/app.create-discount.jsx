@@ -1,46 +1,11 @@
-import { data } from "react-router";
+import { data, useActionData } from "react-router";
 import { authenticate } from "../shopify.server";
 
-export const loader = async ({ request }) => {
+export const action = async ({ request }) => {
   const { admin } = await authenticate.admin(request);
 
   try {
-    // Check if the discount already exists
-    const existingResponse = await admin.graphql(`
-      #graphql
-      query {
-        discountNodes(first: 50) {
-          nodes {
-            id
-            discount {
-              __typename
-              ... on DiscountAutomaticApp {
-                title
-                status
-              }
-            }
-          }
-        }
-      }
-    `);
-
-    const existing = await existingResponse.json();
-
-    const found = existing.data.discountNodes.nodes.find(
-      (node) =>
-        node.discount?.__typename === "DiscountAutomaticApp" &&
-        node.discount.title === "Bag Offer"
-    );
-
-    if (found) {
-      return json({
-        success: true,
-        message: "Bag Offer already exists.",
-        discount: found,
-      });
-    }
-
-    // Create Automatic Discount
+console.log("CREATING DISCOUNT...");
     const response = await admin.graphql(
       `#graphql
       mutation CreateAutomaticDiscount(
@@ -60,15 +25,14 @@ export const loader = async ({ request }) => {
             message
           }
         }
-      }
-      `,
+      }`,
       {
         variables: {
           automaticAppDiscount: {
             title: "Bag Offer",
 
-            // Shopify Function ID
-            functionId: "93437f5f-7e41-079d-af2f-bef62cc643deebbb1354",
+            functionId:
+              "019f3840-3b45-71bc-90b9-6452a0514297",
 
             startsAt: new Date().toISOString(),
 
@@ -88,19 +52,20 @@ export const loader = async ({ request }) => {
       "CREATE DISCOUNT RESULT:",
       JSON.stringify(result, null, 2)
     );
-
-    return json({
+console.log("DISCOUNT RESPONSE:", JSON.stringify(result));
+    return data({
       success: true,
       result,
     });
 
   } catch (error) {
+
     console.error(
       "CREATE DISCOUNT ERROR:",
       error
     );
 
-    return json(
+    return data(
       {
         success: false,
         error: error.message,
@@ -111,3 +76,34 @@ export const loader = async ({ request }) => {
     );
   }
 };
+
+
+export default function CreateDiscount() {
+
+  const result = useActionData();
+
+  return (
+    <s-page heading="Create Bag Offer">
+
+      <s-section>
+
+        <form method="post">
+  <s-button type="submit">
+    Create Discount
+  </s-button>
+</form>
+
+
+        {result && (
+          <s-section>
+            <pre>
+              {JSON.stringify(result, null, 2)}
+            </pre>
+          </s-section>
+        )}
+
+      </s-section>
+
+    </s-page>
+  );
+}

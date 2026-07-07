@@ -4,7 +4,7 @@ api_version = "2025-10"
 name = "t:name"
 handle = "bag-offer-discount"
 type = "function"
-uid = "93437f5f-7e41-079d-af2f-bef62cc643deebbb1354"
+uid = "019f3840-3b45-71bc-90b9-6452a0514297"
 description = "t:description"
 
   [[extensions.targeting]]

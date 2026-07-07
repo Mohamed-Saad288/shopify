@@ -20,5 +20,5 @@ export const loader = async ({ request }) => {
 
   console.log(JSON.stringify(result, null, 2));
 
-  return json(result);
+  return data(result);
 };

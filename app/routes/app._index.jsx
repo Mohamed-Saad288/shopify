@@ -1,4 +1,4 @@
-import { data } from "react-router";
+import { useLoaderData, data } from "react-router";
 import { authenticate } from "../shopify.server";
 import { boundary } from "@shopify/shopify-app-react-router/server";
 
@@ -23,10 +23,10 @@ export const loader = async ({ request }) => {
     }
   `);
 
-  const data = await response.json();
+  const result = await response.json();
 
-  return json({
-    discounts: data.data.discountNodes.nodes,
+  return data({
+    discounts: result.data.discountNodes.nodes,
   });
 };
 
@@ -38,35 +38,20 @@ export default function Index() {
       <s-section>
         <s-table>
           <s-table-header-row>
-            <s-table-header>
-              Title
-            </s-table-header>
-            <s-table-header>
-              Status
-            </s-table-header>
-            <s-table-header>
-              Starts At
-            </s-table-header>
+            <s-table-header>Title</s-table-header>
+            <s-table-header>Status</s-table-header>
+            <s-table-header>Starts At</s-table-header>
           </s-table-header-row>
 
           {discounts.map((item) => {
             const discount = item.discount;
-
             if (!discount) return null;
 
             return (
               <s-table-row key={item.id}>
-                <s-table-cell>
-                  {discount.title}
-                </s-table-cell>
-
-                <s-table-cell>
-                  {discount.status}
-                </s-table-cell>
-
-                <s-table-cell>
-                  {discount.startsAt}
-                </s-table-cell>
+                <s-table-cell>{discount.title}</s-table-cell>
+                <s-table-cell>{discount.status}</s-table-cell>
+                <s-table-cell>{discount.startsAt}</s-table-cell>
               </s-table-row>
             );
           })}
