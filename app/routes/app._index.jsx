@@ -1,6 +1,5 @@
-import { useLoaderData } from "@remix-run/react";
+import { data } from "react-router";
 import { authenticate } from "../shopify.server";
-import { json } from "@remix-run/node";
 import { boundary } from "@shopify/shopify-app-react-router/server";
 
 export const loader = async ({ request }) => {

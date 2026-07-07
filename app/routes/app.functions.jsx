@@ -1,4 +1,4 @@
-import { json } from "@remix-run/node";
+import { data } from "react-router";
 import { authenticate } from "../shopify.server";
 
 export const loader = async ({ request }) => {
