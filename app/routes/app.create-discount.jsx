@@ -68,7 +68,7 @@ export const loader = async ({ request }) => {
             title: "Bag Offer",
 
             // Shopify Function ID
-            functionId: "019f3752-d638-74dc-9c90-4171e7d71342",
+            functionId: "93437f5f-7e41-079d-af2f-bef62cc643deebbb1354",
 
             startsAt: new Date().toISOString(),
 
