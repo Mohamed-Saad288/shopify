@@ -29,6 +29,7 @@ export const action = async ({ request }) => {
           automaticAppDiscount: {
             title: "Bag Offer",
             functionId: "019f3840-3b45-71bc-90b9-6452a0514297",
+            discountClasses: ["PRODUCT"],
             startsAt: new Date().toISOString(),
             combinesWith: {
               productDiscounts: true,
