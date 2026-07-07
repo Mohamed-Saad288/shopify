@@ -1,0 +1,17 @@
+api_version = "2025-10"
+
+[[extensions]]
+name = "t:name"
+handle = "bag-offer-discount"
+type = "function"
+uid = "93437f5f-7e41-079d-af2f-bef62cc643deebbb1354"
+description = "t:description"
+
+  [[extensions.targeting]]
+  target = "cart.lines.discounts.generate.run"
+  input_query = "src/cart_lines_discounts_generate_run.graphql"
+  export = "cart-lines-discounts-generate-run"
+
+  [extensions.build]
+  command = ""
+  path = "dist/function.wasm"
