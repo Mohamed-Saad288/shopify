@@ -16,6 +16,7 @@ export const loader = async ({ request }) => {
               __typename
               ... on DiscountAutomaticApp {
                 title
+                status
               }
             }
           }
@@ -35,6 +36,7 @@ export const loader = async ({ request }) => {
       return json({
         success: true,
         message: "Bag Offer already exists.",
+        discount: found,
       });
     }
 
@@ -65,7 +67,7 @@ export const loader = async ({ request }) => {
           automaticAppDiscount: {
             title: "Bag Offer",
 
-            // Function ID
+            // Shopify Function ID
             functionId: "019f3752-d638-74dc-9c90-4171e7d71342",
 
             startsAt: new Date().toISOString(),
@@ -87,14 +89,21 @@ export const loader = async ({ request }) => {
       JSON.stringify(result, null, 2)
     );
 
-    return json(result);
-  } catch (e) {
-    console.error(e);
+    return json({
+      success: true,
+      result,
+    });
+
+  } catch (error) {
+    console.error(
+      "CREATE DISCOUNT ERROR:",
+      error
+    );
 
     return json(
       {
         success: false,
-        error: e.message,
+        error: error.message,
       },
       {
         status: 500,
