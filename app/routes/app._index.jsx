@@ -1,44 +1,77 @@
-import { useEffect, useState } from "react";
+import { useLoaderData } from "@remix-run/react";
 import { authenticate } from "../shopify.server";
+import { json } from "@remix-run/node";
 import { boundary } from "@shopify/shopify-app-react-router/server";
 
 export const loader = async ({ request }) => {
-  await authenticate.admin(request);
-  return null;
+  const { admin } = await authenticate.admin(request);
+
+  const response = await admin.graphql(`
+    query {
+      discountNodes(first: 10) {
+        nodes {
+          id
+          discount {
+            __typename
+            ... on DiscountAutomaticApp {
+              title
+              status
+              startsAt
+            }
+          }
+        }
+      }
+    }
+  `);
+
+  const data = await response.json();
+
+  return json({
+    discounts: data.data.discountNodes.nodes,
+  });
 };
 
 export default function Index() {
-  const [status, setStatus] = useState("Creating automatic discount...");
-
-  useEffect(() => {
-    async function createDiscount() {
-      try {
-        const res = await fetch("/app/create-discount");
-        const data = await res.json();
-
-        console.log(data);
-
-        if (data.success || data.data) {
-          setStatus("✅ Bag Offer is ready.");
-        } else if (data.errors || data.userErrors) {
-          setStatus("❌ Failed to create discount.");
-          console.log(data);
-        } else {
-          setStatus("Done.");
-        }
-      } catch (e) {
-        console.error(e);
-        setStatus("❌ Error creating discount.");
-      }
-    }
-
-    createDiscount();
-  }, []);
+  const { discounts } = useLoaderData();
 
   return (
     <s-page heading="Bag Offer">
       <s-section>
-        <s-paragraph>{status}</s-paragraph>
+        <s-table>
+          <s-table-header-row>
+            <s-table-header>
+              Title
+            </s-table-header>
+            <s-table-header>
+              Status
+            </s-table-header>
+            <s-table-header>
+              Starts At
+            </s-table-header>
+          </s-table-header-row>
+
+          {discounts.map((item) => {
+            const discount = item.discount;
+
+            if (!discount) return null;
+
+            return (
+              <s-table-row key={item.id}>
+                <s-table-cell>
+                  {discount.title}
+                </s-table-cell>
+
+                <s-table-cell>
+                  {discount.status}
+                </s-table-cell>
+
+                <s-table-cell>
+                  {discount.startsAt}
+                </s-table-cell>
+              </s-table-row>
+            );
+          })}
+        </s-table>
       </s-section>
     </s-page>
   );

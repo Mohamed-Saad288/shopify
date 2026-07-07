@@ -2,7 +2,7 @@
 
 client_id = "e161e3c6929fbe799052f5d76dec4657"
 name = "bag-offer-app"
-application_url = "https://shopify.petplanetapp.com"
+application_url = "https://admin.deraya.cloud"
 embedded = true
 
 [build]
@@ -17,5 +17,5 @@ scopes = "write_discounts,write_metaobject_definitions,write_metaobjects,write_p
 
 [auth]
 redirect_urls = [
-  "https://shopify.petplanetapp.com/auth/callback"
+  "https://admin.deraya.cloud/auth/callback"
 ]

@@ -2,7 +2,7 @@
 
 client_id = "2d0b57c130bec85b44b2647654e9ef6c"
 name = "bag-offer-app"
-application_url = "https://example.com"
+application_url = "https://admin.deraya.cloud"
 embedded = true
 
 [build]
@@ -23,8 +23,9 @@ api_version = "2026-10"
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
 scopes = "write_products,write_metaobjects,write_metaobject_definitions,write_discounts"
 [auth]
-redirect_urls = [ "https://example.com/api/auth" ]
-
+redirect_urls = [
+  "https://admin.deraya.cloud/auth/callback"
+]
 [product.metafields.app.demo_info]
 type = "single_line_text_field"
 name = "Demo Source Info"
